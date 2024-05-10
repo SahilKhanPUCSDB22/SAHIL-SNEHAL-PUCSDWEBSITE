@@ -1,3 +1,4 @@
+//MACROS
 #define klog "/usr/local/www/apache24/log/errlog"
 #define CAPACITY 1024
 #define SEG_SIZE 200
@@ -6,7 +7,7 @@
 #define FTYPE_LEN 1024
 #define FSIZE_LEN 10
 
-
+//HEADERFILES
 #include<stdarg.h>
 #include<stddef.h>
 #include<stdint.h>
@@ -24,13 +25,35 @@
 #include<kcgi.h>
 #include"functions.c"
 
+//VARIABLES
 int sockfd;
 FILE* logp;
 char* err;
 
+//FUNCTIONS
+//LOG
 void logg(char *err)
 {
 	fwrite((void*)err,sizeof(char),strlen(err),logp);
+}
+
+int open_log()
+{
+        logp=fopen(klog ,"a");
+
+        if ( logp == NULL)
+        {
+                err="Failed to open log\n";
+		logg(err);
+                return 1;
+        }
+	else
+	{
+		err="*********log ok************\n";
+		logg(err);
+	}
+
+        return 0;
 }
 
 enum erno {INPUT_NA,INPUT_OK,FILE_BIG,SEND_OK,SEND_NA,PAGE_OK,PAGE_NA,CONNECTION_NA,CONNECTION_OK,STREAM_OK,STREAM_NA};
@@ -111,9 +134,14 @@ static enum erno connect_back(int portnum)
 
 	if( (sockfd=socket(AF_INET,SOCK_STREAM,0))<0)
 	{
-		err="socket";
+		err="socket creation error\n";
 		logg(err);
 		return CONNECTION_NA;
+	}
+	else
+	{
+		err="socket ok\n";
+		logg(err);
 	}
 
 	int rr=1,l,size;
@@ -127,6 +155,9 @@ static enum erno connect_back(int portnum)
 			return CONNECTION_NA;
 		}
 	}
+
+	err="connect ok\n";
+	logg(err);
 	return CONNECTION_OK;
 }
 
@@ -144,6 +175,8 @@ static enum erno create_stream(char **input , char INPUT_STREAM[],int num_inp)
 		}
 	}
 
+	err="stream ok\n";
+	logg(err);
 	return STREAM_OK;
 }
 
@@ -161,13 +194,14 @@ static enum erno get_page(struct kreq *r)
 
 		if(n<0)
 		{
-			err="Failed to recieve data fun:get_page\n";
+			err="Failed to recieve data fun\n";
 			logg(err);
 			return PAGE_NA;
 		}
 
 		if(bytes<2)
 		{
+			logg("Error code recieved\n");
 			return chk_err(buffer[0]);
 		}
 
@@ -179,9 +213,17 @@ static enum erno get_page(struct kreq *r)
 		khttp_puts(r,buffer);
 	}
 
+	logg("page ok\n");
+
 	return PAGE_OK;
 }
 
+void closeprog()
+{
+	logg("*********log close**********\n");
+	close(sockfd);
+	fclose(logp);
+}
 
 
 

@@ -7,6 +7,9 @@
 #define FTYPE_LEN 1024
 #define FSIZE_LEN 10
 #define UTYPE_LEN 4
+#define TESTID 1024
+#define TIME 10
+#define DATE 12
 
 //HEADERFILES
 #include<stdarg.h>
@@ -211,16 +214,16 @@ enum erno getinput(int sockfd,char **input,int inpsize,int size[],int INPUT_MAX)
         return INPUT_OK;
 }
 
-enum erno getuserdetails(char** input,char** udetails)
+enum erno getuserdetails(char* session,char** udetails)
 {
         //sanitize db and retrieve partnois
 
         char * command;
         char *params[1];
 
-        command="select userid,usertype from sessions where session_id=$1";
+        command="select userid from sessions where session_id=$1";
 
-        params[0]=input[0];
+        params[0]=session;
 
         res=PQexecParams(con,(char*)command,1,NULL,(const char* const*)params,NULL,NULL,0);
 
@@ -235,11 +238,11 @@ enum erno getuserdetails(char** input,char** udetails)
         if(cols>0 && rows >0)
         {
                 udetails[0]=(char*)PQgetvalue(res,0,0);
-                udetails[1]=PQgetvalue(res,0,1);
+                udetails[1]=session;
         }
         else
         {
-                err="Userid , Type fetch failure\n";
+                err="Userid fetch failure\n";
                 logg(err);
                 return USER_NA;
         }
@@ -296,12 +299,14 @@ static enum erno sendhtmlcontent(int sockfd , char *buffer , int size)
                 }
 
                 nb=send(sockfd,(buffer+ptr),n,0);
-                if( nb < 0 )
+                
+		if( nb < 0 )
                 {
                         err="Failed to send page fun:send_page()\n";
                         logg(err);
                         return PAGE_NA;
                 }
+
                 ptr+=n;
                 size-=n;
         }

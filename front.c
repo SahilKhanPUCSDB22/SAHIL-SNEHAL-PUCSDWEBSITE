@@ -6,6 +6,9 @@
 #define FNAME_LEN 1024
 #define FTYPE_LEN 1024
 #define FSIZE_LEN 10
+#define TESTID 1024
+#define TIME 10
+#define DATE 12
 
 //HEADERFILES
 #include<stdarg.h>
@@ -43,8 +46,6 @@ int open_log()
 
         if ( logp == NULL)
         {
-                err="Failed to open log\n";
-		logg(err);
                 return 1;
         }
 	else
@@ -121,6 +122,8 @@ static enum erno check_input(struct kreq* r,int KEY__MAX)
 		}
 	}
 
+	logg("input ok\n");
+
 	return INPUT_OK;
 }
 
@@ -169,14 +172,13 @@ static enum erno create_stream(char **input , char INPUT_STREAM[],int num_inp)
 	
 	while(i<num_inp)
 	{
-		if(myappend(INPUT_STREAM,input[i++]))
+		if(!myappend(INPUT_STREAM,input[i++]))
 		{
 			return STREAM_NA;
 		}
 	}
 
-	err="stream ok\n";
-	logg(err);
+	logg("stream ok\n");
 	return STREAM_OK;
 }
 
@@ -184,12 +186,15 @@ static enum erno create_stream(char **input , char INPUT_STREAM[],int num_inp)
 static enum erno get_page(struct kreq *r)
 {
 	unsigned int i=1,n=0,bytes=0;
-	char buffer[CAPACITY];
+	
+	char *buffer = malloc(sizeof(char)*(CAPACITY+1));
 
 	while(i!=0)
 	{
-		n=recv(sockfd,(void*)buffer , CAPACITY,  MSG_WAITALL);
-
+		n= recv(sockfd,(void*)buffer , CAPACITY , 0);
+		
+		buffer[n]=0;
+		
 		bytes+=n;
 
 		if(n<0)
@@ -212,6 +217,8 @@ static enum erno get_page(struct kreq *r)
 
 		khttp_puts(r,buffer);
 	}
+
+	free(buffer);
 
 	logg("page ok\n");
 

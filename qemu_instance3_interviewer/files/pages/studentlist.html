@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Select Students</title>
+		<link rel="stylesheet" href="/css-bin/csssnehal.css">
+	</head>
+	<body>
+		<h2>Choose Students</h2>
+		<div class="box" >
+		<form id="form" method="post">
+			
+			%s
+			
+			<input type="hidden" id="studl" name="studl">
+			<input type="hidden" name="sessionid" value="%s">
+			<input type="hidden" name="testid" value="%s">
+			<input type="hidden" name="random" value="%s">
+			<input type="hidden" name="attempts" value ="%s">
+			<input type="hidden" name="type" value="%s">
+			<input type="hidden" name="review" value="%s"><br>
+			<button type="submit" class="answerbutton">Click here to Create Test</button>
+		</form>
+			</div>
+
+		<script>
+			document.getElementById('form').addEventListener('submit',function(event)
+				{
+					event.preventDefault();
+					submittest();
+				});
+
+			function submittest()
+			{
+				var form=document.getElementById('form');
+				const checkboxes = document.querySelectorAll('input[name="studsl"]:checked');
+				const values = [];
+
+				checkboxes.forEach((checkbox) => 
+				{
+					values.push(checkbox.value);
+				});
+				
+				if(values.length===0)
+				{
+					alert("Please Select a Student");
+					return
+				}
+
+				document.getElementById('studl').value = values.join('\n');
+				
+				form.action='/cgi-bin/submittest.cgi';
+				form.submit();
+			};
+
+		</script>
+
+	</body>
+</html>

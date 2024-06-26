@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Tests</title>
+		<link rel="stylesheet" href="/css-bin/csssnehal.css">
+	</head>
+	<body>
+		<h2>Tests</h2>
+		<table>
+			<thead>
+				<tr>
+					<th>Test Id</th>
+					<th>Test Name</th>
+					<th>Start Date</th>
+					<th>Start Time</th>
+					<th>Marks</th>
+				</tr>
+			</thead>
+			<tbody>
+
+				%s
+
+			</tbody>
+		</table>
+
+		<form hidden method="POST" id="form">
+			
+			<input type="text" name="testid" id="testid">
+			<input type="text" name="sessionid" id="session">
+			<input type="text" name="tdate" id="tdate">
+			<input type="text" name="ttime" id="ttime">
+		
+		</form>
+
+		<script>
+			function loadtest(testid)
+			{
+				var form = document.getElementById('form');	
+				
+                                var currentDate = new Date();
+				var options = {hour12: false}; 
+                                
+                                var curtime = currentDate.toLocaleTimeString('en-US', options);
+                                var curdate = currentDate.toISOString().slice(0,10);
+
+
+				document.getElementById('tdate').value = curdate;
+				document.getElementById('ttime').value = curtime;
+				
+				document.getElementById('testid').value = testid;
+				document.getElementById('session').value = '%s';
+
+				form.action='/cgi-bin/checktest.cgi';
+				
+				form.submit();
+			};
+		</script>
+	</body>
+</html>
+

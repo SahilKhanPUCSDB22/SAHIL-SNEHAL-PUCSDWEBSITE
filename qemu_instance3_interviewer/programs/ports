@@ -1,0 +1,18 @@
+login 1234 
+signup 1235
+createtest 1236
+selectstudents 1237 
+insertall  1238
+logout 1239 
+testpage 1240 
+insertquestion 1241 
+proceed 1242 
+submittest 1243
+checktestfileback 1244
+uploadtestfile 1245
+viewresponse 1246
+studentresponse 1247
+display details 1248
+viewtest 1249
+viewreview 1250
+viewanswer 1251

@@ -1,0 +1,24 @@
+<html>
+	<body>
+		<form id="f" action="/cgi-bin/display.cgi" method="post" enctype="multipart/form-data">
+			<input type="hidden" name="userid" value="sahil">
+			<input type="file" name="fileInput" required>
+			<button type="submit">Click</button>
+		</form>
+		<p id="o">Out</p>
+		<script>
+			document.getElementById('f').addEventListener('submit',function(event){
+				event.preventDefault();
+				var data = new FormData(this);
+				var xhr = new XMLHttpRequest();
+				xhr.open('POST','/cgi-bin/display.cgi',true);
+				xhr.onload = function()
+				{
+						document.getElementById('o').innerHTML=xhr.responseText;
+				}
+				xhr.send(data);
+			});
+		</script>
+	</body>
+</html>
+

@@ -1,0 +1,247 @@
+body
+{
+	font-family: Arial, sans-serif;
+	margin: 150px;
+
+	background-image: url('dep.jpeg');
+	background-size: cover; /* Adjust the size of the background image */
+	background-position: center; /* Center the background image */
+	background-repeat: no-repeat; /* Prevent the background image from repeating */
+}
+
+
+.center
+{
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.clearbutton
+{	
+	display: block;	
+	margin-left:auto;
+	margin-right:auto;
+
+	padding: 10px 30px;
+	background-color: red;
+	color: #fff;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+
+}
+
+.submitbutton
+{
+	display: block;
+
+	position :fixed;	
+	bottom:300px;
+	right:50px;
+
+	padding: 20px 40px;
+	background-color: darkblue;
+	color: #fff;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+
+}
+
+.answerbutton
+{
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+
+	padding: 10px 20px;
+	background-color:forestgreen;
+	color: #fff;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+
+}
+.leftbutton
+{
+	display: block;
+	margin-left: 300px;
+	margin-right: auto;
+
+	padding: 10px 20px;
+	background-color: #007bff;
+	color: #fff;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+.rightbutton
+{
+	display: block;
+	margin-right: 300px;
+	margin-left: auto;
+	padding: 10px 20px;
+	background-color: #007bff;
+	color: #fff;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+.box
+{
+	width: 200px;
+	height: 200px;
+	background-color: #f0f0f0;
+	border: 2px solid #333;
+	border-radius: 10px;
+	text-align: left;
+	line-height: 200px; /* Vertical centering */
+}
+
+h1,h2,h3,h4,h5,h6
+{
+	max-width: 450px;
+	margin-bottom: 15px;
+	margin: 25px auto;
+	padding: 25px;
+	background-color: #ffffff;
+	border-radius: 10px;
+	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+	text-align: center; /* Center align text */
+
+}
+
+form {
+	text-align: center;
+	max-width: 450px;
+	margin: 25px auto;
+	padding: 25px;
+	background-color: #ffffff;
+	border-radius: 10px;
+	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.testdetails
+{
+	background-color:lightgreen;
+}
+
+/*label {
+display: block;
+font-weight: bold;
+text-align: auto;
+}*/
+
+*{
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	border: 5px solid #ddd; /* Bolder border for the table */
+}
+
+th {
+	background-color: darkgreen;
+	color: white;
+	font-weight: bold;
+	padding: 10px;
+	text-align: center;
+	border-bottom: 2px solid #ddd;
+	border-right: 1px solid #ddd; /* Right border for table header cells */
+}
+
+tr:hover {
+	background-color: #f2f2f2;
+}
+
+/* Table Data */
+td {
+	text-align: center;
+	padding: 15px;
+	background-color:lightgreen;
+	border-bottom: 1px solid #ddd;
+	border-right: 1px solid #ddd; /* Right border for table cells */
+}
+
+.pncontainer
+{
+	display:flex;
+}
+
+.container {
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+    width: 80%; /* Width of the container */
+    max-width: 600px; /* Maximum width */
+    margin: 50px auto; /* Center the container and add top/bottom margin */
+    padding: 20px; /* Padding inside the container */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for a 3D effect */
+    text-align: center; /* Center align text */
+    display:flex;
+}
+
+.student
+{
+	display: block;	
+	margin-left:auto;
+	margin-right:auto;
+
+	padding: 20px 50px;
+	background-color: blue;
+	color: #fff;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+.interviewer
+{
+	display: block;	
+	margin-left:auto;
+	margin-right:auto;
+
+	padding: 20px 50px;
+	background-color: green;
+	color: #fff;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+.login
+{
+	display: block;	
+	margin-left:auto;
+	margin-right:auto;
+
+	padding: 20px 50px;
+	background-color: blue;
+	color: #fff;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+
+}
+
+.signup
+{
+	display: block;	
+	margin-left:auto;
+	margin-right:auto;
+
+	padding: 20px 50px;
+	background-color: limegreen;
+	color: #fff;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+
+}
+

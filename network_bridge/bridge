@@ -1,0 +1,35 @@
+sudo brctl addbr webridge
+
+sudo ip tuntap add slogin mode tap
+sudo ip tuntap add supload mode tap
+sudo ip tuntap add ilogin mode tap
+sudo ip tuntap add iupload mode tap
+sudo ip tuntap add database mode tap
+
+sudo brctl addif webridge slogin 
+sudo brctl addif webridge supload
+sudo brctl addif webridge ilogin 
+sudo brctl addif webridge iupload 
+sudo brctl addif webridge database
+
+sudo ip link set webridge up
+
+sudo ip link set slogin up
+sudo ip link set supload up
+sudo ip link set ilogin up
+sudo ip link set iupload up
+sudo ip link set database up
+
+sudo ifconfig webridge 192.168.1.0 netmask 255.255.255.0
+
+#slogin 1-2
+#supload 3-4
+#ilogin 5-6
+#iupload 7-8
+#database 9-10
+
+sudo ifconfig slogin 192.168.1.1 netmask 255.255.255.0
+sudo ifconfig supload 192.168.1.3 netmask 255.255.255.0
+sudo ifconfig ilogin 192.168.1.5 netmask 255.255.255.0
+sudo ifconfig iupload 192.168.1.7 netmask 255.255.255.0
+sudo ifconfig database 192.168.1.9 netmask 255.255.255.0

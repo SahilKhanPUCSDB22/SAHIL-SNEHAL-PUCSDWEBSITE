@@ -1,0 +1,16 @@
+login 1234
+signup 1235
+viewtest 1236
+checktest 1237
+testdetails 1238
+logout 1239
+starttest 1240
+loadquestion 1241
+insertanswer 1242
+clearanswer 1243
+submittest 1244
+checkfile 1245
+uploadfile 1246
+review 1247
+viewanswer 1248
+details 1249

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>POST Request with Anchor Tag Example</title>
+</head>
+<body>
+
+
+<a href="#" id="myLink">Click me to make a POST request</a>
+
+<script>
+
+const link = document.getElementById('myLink');
+
+
+link.addEventListener('click', function(event) {
+  event.preventDefault();
+  
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = '/cgi-bin/upload.cgi'; 
+  
+  const input1 = document.createElement('input');
+  input1.type = 'hidden';
+  input1.name = 'userid';
+  input1.value = '55';
+  form.appendChild(input1); 
+  
+
+  document.body.appendChild(form);
+  
+
+  form.submit();
+});
+</script>
+
+</body>
+</html>
+

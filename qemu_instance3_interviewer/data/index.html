@@ -1,0 +1,30 @@
+<html>
+	<head>
+		<title>WELCOME</title>
+		<link rel="stylesheet" href="/css-bin/csssnehal.css">
+		<head>
+	<body>
+		<h2>PUCSD'S CODING WEBSITE </h2>
+		<img src="/images/main.jpeg" width="800" height="400" class="center">
+		<b><p> Click Here to Login</p></b>
+		<button id="student" class="center">LOGIN</button>
+		<b><p>Click Here to Signup</p></b>
+		<button id="inter" class="center">SIGNUP</button>
+<script>
+	var stu=document.getElementById("student");
+	var intv=document.getElementById("inter");
+	
+	stu.addEventListener("click",function(){
+		stu.style.backgroundColor="grey";
+		window.location.href="login.html"
+	});
+
+	intv.addEventListener("click",function(){
+		intv.style.backgroundColor="grey";
+		window.location.href="signup.html"
+	});
+</script>
+
+	</body>
+</html>
+

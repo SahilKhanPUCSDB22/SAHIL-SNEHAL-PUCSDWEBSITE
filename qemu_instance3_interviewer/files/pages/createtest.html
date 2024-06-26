@@ -1,0 +1,116 @@
+<!DOCTYPE HTML>
+<html>
+	<head>                
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>CREATE TEST PAGE</title>
+		<link rel="stylesheet" href="/css-bin/csssnehal.css">
+	</head>
+
+	<body>
+		<h2>CREATE TEST</h2>
+		<form id="upload" action="/cgi-bin/createtest.cgi" method="post" enctype="multipart/form-data">
+
+			<input type="hidden" name="sessionid" value="%s">
+
+			<label for ="unique_id">TEST ID:</label>
+			<input type="text" id="t_id" name ="ID" required><br>
+			<br>
+
+			<label for ="test_name">Test Name:</label>
+			<input type="text" id="name" name ="name" required><br>
+			<br>
+
+			<label for ="start_date">Start Date</label>
+			<input type="date" id="start_date" name ="sdate" required><br>
+			<br>
+
+			<label for ="st_Time">Start Time</label>
+			<input type="time" id="start_time" name ="stime" required><br>
+			<br>
+
+			<label for ="end_date">End Date</label>
+			<input type="date" id="end_date" name ="edate" required><br>
+			<br>
+
+			<label for ="end_time">End Time</label>
+			<input type="time" id="end_time" name="etime" required><br>
+			<br>
+
+		<!--	<label for ="tt">Test Type</label>
+
+			<select name="type" id="tt" >
+
+			<option value="A">For All</option>
+
+				<option value="M"> MCQ and Discriptive </option>
+				<option value="F"> File Upload Based </option>
+
+			</select><br>
+		-->
+		<input type="hidden" name="type" value ="M"><br>
+
+			<button type="submit" > Submit </button><br>
+
+			<div style="display:none" id="errorspace"></div>
+		</form>
+
+		<script>
+				var form = document.getElementById('upload');
+				var notify=document.getElementById('errorspace');
+
+				form.addEventListener('submit',function(event)
+					{
+						event.preventDefault();
+						
+						
+						notify.style.display='none';
+
+						var id=document.getElementById('t_id').value;
+						
+						if(id.length > 1024)
+						{
+							notify.style.display='block';
+							notify.textContent = "Test Id too long";
+							notify.style.color = "red";	
+						}
+						id=document.getElementById('name').value;
+						
+						if(id.length > 1024)
+						{
+							notify.style.display='block';
+							notify.textContent = "Test Name too long";
+							notify.style.color = "red";	
+						}
+
+						var currentd = new Date(),options = {hour12: false}; 
+
+						var curtime = currentd.toLocaleTimeString('en-US', options);
+						
+						var currentdate = currentd.toISOString().slice(0,10);
+
+						var stime,endtime,sdate,edate;
+						stime = document.getElementById('start_time').value;
+
+						endtime = document.getElementById('end_time').value;
+
+						sdate = document.getElementById('start_date').value;
+
+						edate = document.getElementById('end_date').value;
+
+						if( (currentdate > sdate)||(sdate == edate && stime >= endtime) || ( sdate > edate ) || (stime <= curtime && currentdate==sdate ))
+						{ 
+							notify.style.display='block';
+							notify.textContent = "Invalid Date/Time entered.";
+							notify.style.color = "red";		
+						}
+						else
+						{
+
+							form.submit();	
+						}
+					});
+		</script>
+	</body>
+</html>

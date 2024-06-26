@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Test</title>    
+		<meta charset="UTF-8">
+		<link rel="stylesheet" href="/css-bin/test.css">
+	</head>
+	<body>
+		<div class="timer-container">
+			<div class="timer" id="timer">
+			</div>
+		</div>
+		<br>
+		<div class="container" id="status" style="display:none; background-color:yellow;">
+			<p id="mstatus"</p>
+			<div id="fstatus" style="display:none"></div>
+		</div>
+
+		%s	
+
+		<form id="rform" hidden method="post" enctype="multipart/form-data">
+			<input id="sess" name="sessionid" value="%s">
+			<input id="tid" name="testid" value="%s">
+			<input id="utype" name="utype">
+		</form>
+
+		<form hidden>
+			<input id="enddate" value="%s">
+			<input id="endtime" value="%s">
+		</form>
+
+		<script>	
+
+			var cstatus=document.getElementById('status');
+			var mstatus=document.getElementById('mstatus');
+
+			function clearstatus()
+			{
+				cstatus.style.display="none";
+				mstatus.innerText='';
+			}
+
+			function loadnext()
+			{	
+				var qlabel = document.getElementById('qlabel').innerText;
+				var qtype = qlist[qlabel][1],qno = qlist[qlabel][0];
+
+				qlabel++;
+				loadq(qno,qlabel,qtype);
+			};
+
+			function loadprevious()
+			{
+				var qlabel = (document.getElementById('qlabel').innerText-1);
+
+				var qtype = qlist[qlabel-1][1],qno = qlist[qlabel-1][0];
+
+				loadq(qno,qlabel,qtype);
+			};
+
+			function loadq(qno,qlabel,qtype)
+			{
+				clearstatus();	
+
+				var f = document.getElementById('rform'),i=0,inp=[];
+
+				var narray=["qno","qlabel","qtype"],varray=[qno,qlabel,qtype];
+
+				while(i<3)
+				{
+					inp[i]=document.createElement('input');
+					inp[i].name=narray[i];
+					inp[i].value=varray[i];
+					i++;
+				}
+
+				i=0;
+
+				while(i<3)
+				{
+					f.appendChild(inp[i]);
+					i++;
+				}
+
+
+				var fdata = new FormData(f);
+
+				var  xhr = new XMLHttpRequest();
+
+				xhr.open("POST","/cgi-bin/loadquestion.cgi",true);
+
+				xhr.onload = function()
+				{
+					if(xhr.readyState === XMLHttpRequest.DONE)
+					{
+						if(xhr.status===200)
+						{
+							document.getElementById('qform').innerHTML= xhr.responseText;
+						}
+					}
+				}			
+
+				xhr.send(fdata);
+
+				var subbutton=document.getElementById('subbutton');
+
+				if(qlist.length>1)
+				{
+					var pb = document.getElementById('pbut'),nb=document.getElementById('nbut');
+					if(qlist[0][0]!=qno && qlist[qlist.length-1][0]!=qno)
+					{
+						pb.style.display='block';
+						nb.style.display='block';
+						subbutton.style.display='none';
+					}
+
+					else if(qlist[0][0]==qno)
+					{	
+						pb.style.display='none';
+						nb.style.display='block';
+						subbutton.style.display='none';
+
+					}
+
+					else if(qlist[qlist.length-1][0]==qno)
+					{
+						pb.style.display='block';
+						nb.style.display='none';
+						subbutton.style.display='block';
+					}
+				}	
+
+
+				i=0;
+
+				while(i<3)
+				{
+					f.removeChild(inp[i]);
+					i++;
+				}
+
+			};
+/*----------------------------------------------------------------------------------------------------------------------------------------*/
+
+
+			document.getElementById('qform').addEventListener('submit' , function (event)
+				{
+					event.preventDefault();
+					var type = (document.getElementById('qlabel').innerText-1),qno,f,i=0,ans;
+
+
+					qno = qlist[type][0];
+
+					type = qlist[type][1];
+
+					if(type==='D')
+					{
+						if( document.getElementById('danswer').value.trim() === '' )
+						{
+							mstatus.innerText='Please Enter Something';
+							cstatus.style.display='block';
+							return;
+						}
+
+						ans=document.getElementById('danswer').value;
+					}
+					if(type==='M')
+					{
+						ans=document.querySelector('input[name="qanswer"]:checked').value;
+
+					}
+
+					if(type==='F')
+					{
+						uqno=qno;	
+						uploadfile();
+						return;
+					}
+
+					var inp = [] , narray = ["qno","qtype","answer"] , varray = [qno,type,ans] ; 
+
+					f = document.getElementById('rform');
+
+					while(i<3)
+					{
+						inp[i]=document.createElement('input');
+						inp[i].name=narray[i];
+						inp[i].value=varray[i]
+
+						f.appendChild(inp[i]);
+
+						i++;
+					}
+
+					var fdata = new FormData(f);
+
+					var  xhr = new XMLHttpRequest();
+
+					xhr.open("POST","/cgi-bin/insertanswer.cgi",true);
+
+					xhr.onload = function()
+					{
+						if(xhr.readyState === XMLHttpRequest.DONE)
+						{
+							if(xhr.status===200)
+							{	
+								mstatus.innerText= xhr.responseText;
+
+								cstatus.style.display='block';
+							}
+						}
+					}
+
+					xhr.send(fdata);
+					var i=0;
+
+					while(i<3)
+					{
+						f.removeChild(inp[i]);
+						i++;
+					}
+				});
+/*-----------------------------------------------------------------------------------------------------------------------------------------*/
+
+			function uploadfile()
+			{
+				clearstatus();
+				var fstatus=document.getElementById('fstatus');
+                                while (fstatus.firstChild) 
+                                {
+                                        fstatus.removeChild(fstatus.firstChild);
+                                }
+
+
+				var f=document.getElementById('rform'),names=["qno","file"];
+
+				var inpfile = document.createElement('input'),quest = document.createElement('input');
+				inpfile.type='file';
+				inpfile.files=document.getElementById('sfile').files;
+				inpfile.name=names[1];
+
+				quest.name=names[0];
+				quest.value=uqno;
+
+				f.appendChild(inpfile);
+				f.appendChild(quest);
+
+				var fdata = new FormData(f),xhr = new XMLHttpRequest();
+
+				xhr.open("POST","/cgi-bin/checktestfile.cgi",true);
+				
+				xhr.onload = function()
+				{
+					var resp;
+					
+					var input = document.createElement('p');
+
+
+					if(xhr.responseText==='0')
+					{
+						resp='<p>Attempt to upload this file had failed previously.Decide:</p><brk><button onclick="decision(true)">Resume</button><brk><button onclick="decision(false)">Restart</button>'
+
+						input.innerHTML=resp;
+i
+						fstatus.appendChild(input);
+						
+																				  fstatus.style.display='block';
+
+						cstatus.style.display='block';
+					}
+					else
+						if(xhr.responseText==='1')
+						{
+							resp='<p>File of different size already exists , Kindly rename this file or reupload this file</p><brk><button onclick="decision(false)">Reupload</button>';
+							input.innerHTML=resp;
+
+							fstatus.appendChild(input);
+
+							fstatus.style.display='block';
+							cstatus.style.display='block';
+						}
+					else
+						if(xhr.responseText==='2')
+						{
+							resp='<p>File already exists</p>';
+							input.innerHTML=resp;
+							fstatus.appendChild(input);
+							fstatus.style.display='block';
+							cstatus.style.display='block';
+						}
+
+					else
+						if(xhr.responseText==='3')
+						{
+								cstatus.style.display='none';
+								document.getElementById('utype').value='new';
+								upload();	
+						}
+
+							else
+								if(xhr.responseText==='4')
+								{
+									resp='<p>File too large(>20MB)</p>';
+									input.innerHTML=resp;
+									fstatus.appendChild(input);
+									fstatus.style.display='block';
+									cstatus.style.display='block';
+								}
+					else
+					if(xhr.responseText==='5')
+						{
+							resp='<p>File of different name already exists , Kindly rename this file or reupload this file</p><brk><button onclick="decision(false)">Reupload</button>';
+							input.innerHTML=resp;
+
+							fstatus.appendChild(input);
+							fstatus.style.display='block';
+
+							cstatus.style.display='block';
+						}
+
+							else
+								if(xhr.responseText>'4')
+								{
+									input.innerHTML=xhr.responseText;
+									fstatus.appendChild(input);
+									fstatus.style.display='block';
+									cstatus.style.display='block';
+								}
+						}
+
+					xhr.send(fdata);
+					
+					var i=0;
+
+					f.removeChild(inpfile);
+					f.removeChild(quest);
+
+				};
+
+				var utype = document.getElementById('utype'),uqno;
+				
+				function upload()
+				{
+
+				var f=document.getElementById('rform'),names=["qno","file"];
+
+				var inpfile = document.createElement('input'),quest = document.createElement('input');
+				inpfile.type='file';
+				inpfile.files=document.getElementById('sfile').files;
+				inpfile.name=names[1];
+
+				quest.name=names[0];
+				quest.value=uqno;
+
+				f.appendChild(inpfile);
+				f.appendChild(quest);
+
+	
+				var fdata = new FormData(f),xhr = new XMLHttpRequest();
+
+				xhr.open("POST","/cgi-bin/uploadtestfile.cgi",true);
+
+				console.log('Uploading');
+				xhr.onload=function()
+					{
+						var input = document.createElement('p');
+						if(xhr.readyState === XMLHttpRequest.DONE)
+						{
+							if(xhr.status===200)
+							{	
+								input.innerText= xhr.responseText;
+								fstatus.appendChild(input);
+								fstatus.style.display='block';
+								cstatus.style.display='block';
+							}
+						}
+					}
+
+					xhr.send(fdata);
+
+					f.removeChild(inpfile);
+					f.removeChild(quest);
+
+				};
+
+
+
+				function decision(uploadstatus)
+                                {
+                                        if(uploadstatus)
+                                        {
+                                                utype.value='old';
+                                        }
+                                        else
+                                        {
+                                                utype.value='new';
+                                        }
+					upload();
+                                }
+/*----------------------------------------------------------------------------------------------------------------------------------------*/
+
+				function clearanswer()
+				{
+					var type = (document.getElementById('qlabel').innerText-1),qno,f,i;	
+
+					qno = qlist[type][0];
+
+					type = qlist[type][1];
+
+					var inp = [] , narray = ["qno","qtype"] , varray = [qno,type] ;
+
+					f = document.getElementById('rform');
+
+					i=0
+
+					while(i<2)
+					{
+						inp[i]=document.createElement('input');
+						inp[i].name=narray[i];
+						inp[i].value=varray[i]
+
+						f.appendChild(inp[i]);
+						i++;
+					}
+
+					var fdata=new FormData(f);
+
+					if(type==='M')
+					{
+						var buttons = document.getElementsByName('qanswer');
+						i=0;
+
+						while(i<buttons.length)
+						{
+							buttons[i].checked=false;
+							i++;
+						}
+					}
+
+					if(type==='D')
+					{
+						document.getElementById('danswer').value='';
+					}
+
+					var xhr= new XMLHttpRequest;
+
+					xhr.open("POST","/cgi-bin/clearanswer.cgi",true);
+
+					xhr.onload = function()
+					{
+						if(xhr.readyState === XMLHttpRequest.DONE)
+						{
+							if(xhr.status===200)
+							{	
+								mstatus.innerText= xhr.responseText;
+
+								cstatus.style.display='block';
+							}
+						}
+					}
+
+					xhr.send(fdata);
+					i=0;
+
+					while(i<2)
+					{
+						f.removeChild(inp[i]);
+						i++;
+					}
+				};
+
+/*-----------------------------------------------------------------------------------------------------------------------------------------*/
+
+				function submittest()
+				{
+					var form = document.getElementById('rform'),currentDate = new Date(),options = {hour12: false},i=0; 
+
+					var curtime = currentDate.toLocaleTimeString('en-US', options),curdate = currentDate.toISOString().slice(0,10);
+
+					var inp=[],narray=["sdate","stime"],varray=[curdate,curtime];
+					while(i<2)
+					{
+						inp[i]=document.createElement('input');
+						inp[i].name=narray[i];
+						inp[i].value=varray[i]
+
+						form.appendChild(inp[i]);
+						i++;
+					}
+
+					form.action = '/cgi-bin/submittest.cgi';
+
+					form.submit();
+					clearance();
+				};
+
+				function clearance()
+				{
+					var bodyElement = document.body;
+					while (bodyElement.firstChild) 
+					{
+						bodyElement.removeChild(bodyElement.firstChild);
+					};
+
+					bodyElement.innerHTML = '<div class = "container" > <p> Test Over </p> </div>';
+				}
+
+
+		</script>
+
+		<script>
+
+				initializeCountdown();
+
+				var interval;
+
+				function initializeCountdown()
+				{
+					let dateStr = document.getElementById("enddate").value;
+					let timeStr = document.getElementById("endtime").value;
+
+					let endDateTimeStr = `${dateStr}T${timeStr}`;
+
+					let enddate = new Date(endDateTimeStr).getTime();
+
+					function timeron()
+					{
+
+						let now = new Date().getTime();
+						let remaining = enddate-now;
+
+						if(remaining <= 0)
+						{
+							clearInterval(interval);
+							document.getElementById("timer").textContent = 'Time Over';
+							submittest();
+						}
+
+						let days = Math.floor( remaining / (1000 * 60 * 60 * 24));
+						let hours = Math.floor( mymod(remaining , (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+						let minutes = Math.floor(mymod(remaining ,(1000 * 60 * 60)) / (1000 * 60));
+						let seconds = Math.floor(mymod(remaining , (1000 * 60)) / 1000);
+
+						let countdown = days+' Days '+hours+' Hours '+minutes+' Mins '+seconds+' Secs ';
+
+						document.getElementById("timer").textContent = countdown;
+
+					};												
+
+					timeron();
+					interval =setInterval(timeron,1000);
+						};
+
+						function mymod(x,y)
+						{
+							var num1=x,num2=y;
+
+							while(num1>=num2)
+							{
+								num1-=num2;
+							}
+
+							return num1;
+						}
+					</script>
+	</body>
+</html>

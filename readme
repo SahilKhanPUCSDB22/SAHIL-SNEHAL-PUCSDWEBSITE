@@ -1,0 +1,10 @@
+This directory contains:
+
+1.Configuration Files of : postgresql(postgresql.conf,pg_hba.conf) , apache(httpd.conf)
+2.Network bridge creating script (network_bridge directory)
+3.Script to create qemu instances (qemu_script directory)
+4.Sources code , html files , css files , log from all qemu instances
+
+To setup the website :
+
+create qcow files -> turn up the bridge -> run instances using qemu scripts -> install postgresql,apache,kcgi -> replace the configuration files -> copy the source codes to each individual instance -> use sql files to create the database -> use makefile in programs directory to start the website scripts -> now the website is usable.

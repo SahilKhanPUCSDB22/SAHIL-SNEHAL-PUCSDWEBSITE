@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Start Test</title>
+		<link rel="stylesheet" href="/css-bin/csssnehal.css">
+	</head>
+	<body>
+		<div class="display">
+
+		%s
+		
+		</div>
+		<form hidden id="form" method="post">
+			<input type="hidden" name="sessionid" value="%s">
+			<input type="hidden" name="testid" value="%s">
+			<input type="hidden" name="tdate" id="tdate">
+			<input type="hidden" name="ttime" id="ttime">
+		</form>
+		
+		<h4><a href="#" onclick="starttest(); return false;">Click Here To Start Test</a></h4>
+
+		<script>
+			function starttest()
+			{
+				var form = document.getElementById('form'); 
+				
+				var currentDate = new Date();
+
+				var day = currentDate.getDate();
+				var month = currentDate.getMonth() + 1; // Months are zero-indexed
+				var year = currentDate.getFullYear();
+
+				var curdate = (day < 10 ? '0' : '') + day + '-' + (month < 10 ? '0' : '') + month + '-' + year;
+
+				var ISTOffset = 5.5 * 60 * 60 ; // IST is UTC+5:30
+				var indianTime = new Date(currentDate.getTime() + ISTOffset);
+				var curtime = indianTime.toLocaleTimeString('en-IN', { hour12: false });
+	
+				document.getElementById('tdate').value=curdate;
+				document.getElementById('ttime').value=curtime;
+				form.action='/cgi-bin/starttest.cgi';
+				form.submit();
+			};
+		</script>
+	</body>
+</html>

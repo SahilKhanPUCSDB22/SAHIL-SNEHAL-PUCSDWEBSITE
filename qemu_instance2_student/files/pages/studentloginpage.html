@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+        <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+		
+		<title>Welcome</title>
+                <link rel="stylesheet" href="/css-bin/background.css">
+        </head>
+
+	<body>
+		<div class="front">
+		<p><b>WELCOME</b> : %s</p><br>
+		<p><b>SESSION ID :</b> %s</p><br>
+		
+		
+	
+		<p><a href="#" onclick="load_page('/cgi-bin/studdetail.cgi'); return false;" >View Profile</a></p>
+		<p><a href="#" onclick="load_page('/cgi-bin/viewtest.cgi'); return false;" >View Tests</a></p>                
+		<p><a href="#" onclick="load_page('/cgi-bin/viewreview.cgi'); return false;" >View Attempted Tests</a></p>
+		<p><a href="#" onclick="load_page('/cgi-bin/logout.cgi'); return false;" >Logout</a></p>
+		</div>
+		<form hidden id="form" method="POST">
+			<input id="session" type="text" name="sessionid" value="%s">
+		</form>
+	
+		<script>
+
+			function load_page(scriptname)
+			{
+				var form = document.getElementById('form');
+				form.action=scriptname;
+
+				form.submit();
+			};
+
+		</script>
+	</body>
+</html>

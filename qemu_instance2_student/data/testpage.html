@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Test</title>
+		<link rel="stylesheet" href="css-bin/csssnehal.css">
+	</head>
+	<body>
+		<form id="test">	
+			<label for="q1">Enter Question:</label>
+			<input type="text" id="q1" name="q1"><br>
+			<div id="newop"></div>
+		</form>
+		<div>
+			<p><a id="inp" href="#" onclick="option()">Add option</a></p>
+		</div>
+		<script>
+			var qno = 1;
+
+			function option()
+			{
+				var cur = document.getElementById('newop');
+				
+				var newlabel=document.createElement('label');
+				newlabel.textContent='Op'+qno;
+				newlabel.setAttribute('for',qno);
+				cur.appendChild(newlabel);
+
+				var newinp = document.createElement('input');
+				newinp.type='text';
+				newinp.name=qno;
+				newinp.id=qno;
+				cur.appendChild(newinp);
+				
+				cur.appendChild(document.createElement('br'));
+
+				qno = qno+1;
+			};
+		</script>
+	</body>
+</html>

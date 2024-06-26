@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" href="/css-bin/test.css">
+		<title>Questions</title>
+
+	</head>
+	<body>
+		<div id="inp" class="testbox">
+			<input type="radio" id="mcqo" name="md" value="M">
+			<label for = "mcqo">MCQ</label><br><br>
+			<input type="radio" id="des" name="md" value="D">
+			<label for="deso">Descriptive</label><br><br>
+			<input type="radio" id="fileo" name="md" value="F">
+			<label for="fileo">File Upload</label><br><br>
+			<input type="radio" id="proc" name="md" value="P">
+			<label for="proc">Proceed Further</label><br><br>
+			<button class="answerbutton" onclick="genform()">Submit</button>
+		</div>
+
+		<div id="dform" class="testbox" style="display:none"></div>
+		
+		<button id="back" class="backbutton" onclick="refresh()" style="display:none">Back</button>
+
+		<form hidden id="fsubmit" method="post" action="/cgi-bin/insertq.cgi" enctype="multipart/form-data">
+			<input id="sessionid" name="sessionid" value="%s">
+			<input id="testid" name="testid" value="%s">
+			<input id="qtype" name="qtype">
+			<input name="qno" value="%d">
+			<input type="file" id="ufile" name="file"> 
+			<input id="nop" name="nop">
+			<input id="utype" name="utype">
+			<textarea id="question" name="question"></textarea>
+			<textarea id="options" name="options"></textarea>
+		</form>
+
+		<form hidden id="proceed" method="post" action="/cgi-bin/proceed.cgi">
+			<input id="sess" name="sessionid">
+			<input id="test" name="testid">
+		</form>
+		<script>
+			var opno=1,opcount=1;
+			
+
+			function genform()
+			{
+				var inp = document.getElementById('inp'),dform = document.getElementById('dform');
+				var type = document.querySelector('input[name="md"]:checked').value;
+				
+				if(type==='P')
+				{
+					proceednext();
+				}
+				else
+				{
+					inp.style.display='none';
+					dform.innerHTML = allotform(type);
+					dform.style.display='block';
+
+					var backb=document.getElementById('back');
+					backb.style.display='block';
+				}
+			};
+
+			function refresh()
+			{
+				var dform = document.getElementById('dform'),backb=document.getElementById('back');
+				inp.style.display='block';
+				backb.style.display='none';
+				dform.innerHTML="";
+				dform.style.display='none';
+			}
+
+			function proceednext()
+			{	
+				var form = document.getElementById('proceed');
+				document.getElementById('sess').value=document.getElementById('sessionid').value;
+				document.getElementById('test').value=document.getElementById('testid').value;
+				form.submit();
+			}
+
+
+			function allotform(type)
+			{
+
+				if(type==='M')
+				{
+					return '<form id="mcq"><label for="mq">Question.</label><br><textarea id="mq"  rows="10" cols="100"></textarea><br><label for="op'+opno+'">Option.</label><textarea rows = "1" cols="44" id="op'+opno+'" ></textarea> <div id ="newop"></div><br>  <button type="submit" class="answerbutton">Submit</button> </form><br> <button onclick="addop()" style="background-color:blue; padding:10px 20px; color:white;" >Add Option</button><br>';
+				}
+				if(type==='D')
+				{
+					return '<form id="des">\n<label for="dq">Question.</label><br>\n <textarea id="dq" rows="10" cols="100" ></textarea><br><label for ="limit">Answer Character Limit</label> <input type=text id="limit" required><br><br><button class="answerbutton" type="submit">Submit</button></form>';
+				}
+				if(type==='F')
+				{
+					return '<form id="fupload"> <label for ="fq">Question.</label><br>\n <textarea id ="fq" rows="10" cols="70"></textarea><br> <label for = "ifile" > Select Your File </label>  <input type="file" name="file" id="ifile" required> <br><br> <button type="submit" class="answerbutton">Upload</button> </form> \n<div id="errormessage" style = "display:none"></div>';
+				}
+
+			};
+
+			function addop()
+			{
+				opno = opno+1;
+				opcount++;
+				var cur = document.getElementById('newop');
+				var label = document.createElement('label');
+
+				label.textContent = 'Option. ';
+				label.id='l'+opno;
+				label.setAttribute('for',opno);
+				cur.appendChild(label);
+
+				var newinp = document.createElement('textarea');
+				newinp.name=opno;
+				newinp.id=opno;
+				newinp.rows=1;
+				newinp.cols=44;
+				cur.appendChild(newinp);
+
+				var newbut = document.createElement('button');
+				newbut.id='but'+opno;
+				newbut.setAttribute('onclick','remop('+opno+')');
+				newbut.textContent='Remove';
+				newbut.style.backgroundColor='red';
+				newbut.style.padding='5px 10px';
+				cur.appendChild(newbut);
+
+				var newbr = document.createElement('br');
+				newbr.id='br'+opno;
+				cur.appendChild(newbr);
+
+			};
+
+			function remop(opno)
+			{
+				opcount--;
+				
+				var cur = document.getElementById('newop');
+				cur.removeChild(document.getElementById(opno));
+				cur.removeChild(document.getElementById('l'+opno));
+				cur.removeChild(document.getElementById('but'+opno));
+				cur.removeChild(document.getElementById('br'+opno));
+			}; 
+
+			document.getElementById('dform').addEventListener('submit',function(event)
+				
+				{
+					event.preventDefault();
+					
+					if(event.target.id==='mcq')
+					{	
+						var ques=document.getElementById('mq').value,o1=document.getElementById('op1').value;
+						
+						if(ques.trim()==='')
+						{
+							alert('Please Enter Something in Question Box');
+							return;
+						}
+						else if (o1.trim()==='')
+						{
+							alert('Please enter an option');
+							return;
+						}
+						else
+						{
+							mcqsubmit();
+						}
+					}
+
+					if(event.target.id==='des')
+					{
+						console.log('des');
+
+						var ques = document.getElementById('dq').value;
+
+						if( ques.trim()==='')
+						{
+							console.log('ret');
+							
+							alert('Please Enter Something in Question Box');
+							
+							return ;
+						}
+						else
+						{
+							console.log('ques+'+ques);
+							dessumit(ques);
+						}
+					}
+
+					if(event.target.id === 'fupload')
+					{
+						//event.preventDefault();
+						
+						filesubmit();
+					}
+				});
+
+			function mcqsubmit()
+			{
+
+				var i=1, f = document.getElementById('mcq') , option = [],inpstring;
+				
+				var ele = f.elements , e ;
+				
+				console.log(ele.length);
+
+				while(i < ele.length )
+				{	
+					e = ele[i];
+					
+					if(e.tagName==="TEXTAREA")
+					{
+						option.push(e.value.length);
+						option.push(e.value);
+					}
+					i++;
+				}
+
+				inpstring = option.join("\n");
+
+				var mcqform = document.getElementById('fsubmit');
+
+				document.getElementById('question').value =document.getElementById('mq').value;;
+				document.getElementById('qtype').value='M';
+				document.getElementById('options').value = inpstring;
+				document.getElementById('nop').value=opcount;
+				
+				mcqform.submit();
+			};
+
+			function dessumit(ques)
+			{
+				var desform = document.getElementById('fsubmit');
+				{
+					document.getElementById('question').value = ques;
+					document.getElementById('qtype').value='D';
+					document.getElementById('options').value='N';
+					document.getElementById('nop').value=document.getElementById('limit').value;
+					desform.submit();
+				}
+			};
+
+			function filesubmit()
+			{
+				var espace = document.getElementById('errormessage');
+			        while (espace.firstChild) 
+				{
+            				espace.removeChild(espace.firstChild);
+        			}
+
+				var fileform = document.getElementById('fsubmit');
+
+				document.getElementById('ufile').files=document.getElementById('ifile').files;
+				document.getElementById('question').value=document.getElementById('fq').value
+				
+				if(document.getElementById('question').value.trim()==='')
+				{
+					alert('Please Enter Something in Question Box');
+						
+					return ;
+				}
+
+
+				var xhr = new XMLHttpRequest; 
+
+				xhr.open('POST',"/cgi-bin/checktestfile.cgi",true);
+				
+				var fdata = new FormData(fsubmit);
+				
+				xhr.onload = function()
+				{
+					var resp;
+					var input = document.createElement('p');
+                                       
+					console.log(xhr.responseText);
+
+					if(xhr.responseText==='0')
+                                        {
+                                                resp='<p>Attempt to upload this file had failed previously.Decide:</p><brk><button onclick="decision(true)">Resume</button><brk><button onclick="decision(false)">Restart</button>'
+						
+						input.innerHTML=resp;
+
+						espace.appendChild(input);
+
+                                                espace.style.display='block';
+                                        }
+
+                                        if(xhr.responseText==='1')
+                                        {
+                                                resp='<p>File of different size already exists , Kindly rename this file or reload this file</p><brk><button onclick="decision(false)">Reupload</button>';
+                                                input.innerHTML=resp;
+						
+						espace.appendChild(input);
+
+                                                espace.style.display='block';
+                                        }
+
+                                        if(xhr.responseText==='2')
+                                        {
+                                                resp='<p>File already exists</p>';
+                                                input.innerHTML=resp;
+						espace.appendChild(input);
+                                                espace.style.display='block';
+                                        }
+
+                                        if(xhr.responseText==='3')
+                                        {
+						espace.style.display='none';
+                                                document.getElementById('utype').value='new';
+						document.getElementById('fsubmit').action='/cgi-bin/uploadtestfile.cgi';
+                                                document.getElementById('fsubmit').submit();
+                                        }
+
+                                        if(xhr.responseText==='4')
+                                        {
+                                                resp='<p>File too large(>20MB)</p>';
+                                                input.innerHTML=resp;
+						espace.appendChild(input);
+                                                espace.style.display='block';
+                                        }
+
+                                        if(xhr.responseText>'4')
+                                        {
+                                                input.innerHTML=xhr.responseText;
+                                                espace.style.display='block';
+						espace.appendChild(input);
+                                        }
+                                }
+
+                                xhr.send(fdata);
+                        };	
+				
+				function decision(uploadstatus)
+                                { 
+					if(uploadstatus)
+                                        {
+                                                document.getElementById('utype').value='old';
+                                        }
+                                        else
+                                        {
+                                                document.getElementById('utype').value='new';
+                                        }
+						
+					document.getElementById('fsubmit').action='/cgi-bin/uploadtestfile.cgi';
+                                        document.getElementById('fsubmit').submit();
+                                }
+
+		</script>
+
+	</body>
+</html>
+

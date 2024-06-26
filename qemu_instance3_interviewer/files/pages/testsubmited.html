@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" href="/css-bin/csssnehal.css">
+		<title>Test Created</title>
+	</head>
+	<body>
+		<h1>Thank You !</h1>
+		<div class="display">
+		
+		<label>Test Created Successfully</label><br>
+
+		<a href="#" onclick="gohome(); return false;">Logout</a>
+		</div>
+
+		<form id="home" hidden method="post" action="/cgi-bin/logout.cgi">
+			<input type"text" name="sessionid" value="%s">
+		</form>
+		<script>
+			function gohome()
+			{
+				document.getElementById('home').submit();
+			}
+		</script>
+	</body>
+</html>

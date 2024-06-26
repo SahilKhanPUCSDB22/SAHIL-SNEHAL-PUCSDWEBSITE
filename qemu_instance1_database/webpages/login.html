@@ -1,0 +1,23 @@
+<html>
+	<head>
+		<h1><title>Login</title></h1>
+		<link rel="stylesheet" href="/css-bin/csssnehal.css">
+<head>
+
+	<body>
+		<h2>LOGIN</h2>
+		<form id="form" action="http://localhost:7001/cgi-bin/login.cgi" method="POST">
+			<label for ="stud_id">User ID:</label>
+			<input type="text" id="stud_id" name="ab" required><br><br>
+			<label for ="stud_password">Password:</label>
+			<input type=text id="stud_password" name="cd" required><br><br>
+			<input type="radio" id="st" name="s/i" value="s">
+			<label for="st">Student</label>
+			<input type="radio" id="in" name="s/i" value="i">
+			<label for="in">Interviewer</label>
+			<input type="hidden" name="hidden" value="pucsd">
+			<button type=submit"> Submit </button><br>
+		</form>
+		<button value="forgot" class="center">Forgot Password?</button><br>
+	</body>
+</html>

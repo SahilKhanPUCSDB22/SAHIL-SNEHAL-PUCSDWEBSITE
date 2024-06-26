@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+        <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+		
+		<title>Welcome</title>
+                <link rel="stylesheet" href="/css-bin/css1.css">
+        </head>
+
+	<body>
+		<p><b>WELCOME</b> : %s</p><br>
+		<p><b>SESSION ID :</b> %s</p><br>
+		
+		
+		<form hidden id="form" method="POST">
+			<input id="session" type="text" name="sessionid" value="%s">
+		</form>
+
+		<p><a href="#" onclick="load_page('/cgi-bin/profile.cgi')" >View Profile</a></p>
+		<p><a href="#" onclick="load_page('/cgi-bin/viewtest.cgi')" >View Tests</a></p>
+		<p><a href="#" onclick="load_page('/cgi-bin/logout.cgi')" >Logout</a></p>
+		
+		<script>
+
+			function load_page(scriptname)
+			{
+				var form = document.getElementById('form');
+				form.action=scriptname;
+
+				form.submit();
+			};
+
+		</script>
+	</body>
+</html>

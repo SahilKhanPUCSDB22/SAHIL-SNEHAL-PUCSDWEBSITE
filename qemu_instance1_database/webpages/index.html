@@ -1,0 +1,34 @@
+<html>
+	<head>
+		<title>WELCOME</title>
+		<link rel="stylesheet" href="/css-bin/csssnehal.css">
+	</head>
+	
+	<body>
+		<h2>PUCSD'S CODING WEBSITE </h2>
+		<div class="container">
+		<button id="student" class="student">STUDENT</button> <br> <br>
+		<button id="interviewer" class="interviewer">INTERVIEWER</button>
+		</div>
+<script>
+
+	var st = document.getElementById('student');
+	st.addEventListener("click",function()
+	{
+		st.style.backgroundColor="grey";
+		window.location.href="/student.html"
+	});
+
+	var it = document.getElementById('interviewer');
+	
+	it.addEventListener("click",function()
+	{
+		it.style.backgroundColor="grey";
+		window.location.href="/interviewer.html"
+	});
+
+</script>
+
+	</body>
+</html>
+

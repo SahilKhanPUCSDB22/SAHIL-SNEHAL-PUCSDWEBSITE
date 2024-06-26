@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" href="/css-bin/css3.css">
+		<title>Questions</title>
+
+	</head>
+	<body>
+		<div id="inp">
+		<input type="radio" id="mcq" name="md" value="M">
+		<label for="mcq">MCQ</label><br>
+		<input type="radio" id="des" name="md" value="D">
+		<label for="mcq">Descriptive</label><br>
+		<input type="radio" id="proc" name="md" value="P">
+		<label for="proc">Proceed Further</label><br>
+		<button onclick="genform()">Submit</button>
+		</div>
+
+		<form hidden id="fsubmit" method="post" action="/cgi-bin/insertquestion.cgi">
+			<input id="sessionid" name="sessionid" value="%s">
+			<input id="testid" name="testid" value="%s">
+			<input id="qtype" name="qtype" >
+			<input name="qno" value="%d">
+			<input id="question" name="question">
+			<input id="options" name="options">
+		</form>
+		<form hidden id="proceed" method="post" action="/cgi-bin/proceed.cgi">
+			<input id="sess" name="sessionid">
+			<input id="test" name="testid">
+		</form>
+	<script>
+			var opno=1;
+
+			function genform()
+			{
+				var inp = document.getElementById('inp');
+				inp.innerHTML= allotform(document.querySelector('input[name="md"]:checked').value);
+			};
+
+			function allotform(type)
+			{
+				var inp = document.getElementById('inp');
+				
+				if(type=='M')
+				{
+					return '<form id="mcq">\n<label for="mq">Question.</label>\n<textarea id="mq" row="50" cols="100"></textarea><br>\n<label for="op'+opno+'">Option.</label>\n<input type="text" id="'+opno+'" required>\n <div id ="newop"></div>  <button type="submit">Submit</button> </form> \n <button onclick="addop()">Add Option</button><br>';
+				}
+				if(type=='D')
+				{
+					return '<form id="des">\n<label for="dq">Question.</label>\n <textarea id="dq" rows="50" cols="100" ></textarea></form><button onclick="dessumit()">Submit</button>';
+				}
+				if(type=='P')
+				{
+					var form = document.getElementById('proceed');
+					document.getElementById('sess').value=document.getElementById('sessionid').value;
+					document.getElementById('test').value=document.getElementById('testid').value;
+					form.submit();
+				}
+			};
+
+			function addop()
+			{
+				opno = opno+1;
+				var cur = document.getElementById('newop');
+				var label = document.createElement('label');
+
+				label.textContent = 'Option. ';
+				label.id='l'+opno;
+				label.setAttribute('for',opno);
+				cur.appendChild(label);
+
+				var newinp = document.createElement('input');
+				newinp.type='text';
+				newinp.name=opno;
+				newinp.id=opno;
+				newinp.required=true;
+				cur.appendChild(newinp);
+				
+				var newbut = document.createElement('button');
+				newbut.id='but'+opno;
+				newbut.setAttribute('onclick','remop('+opno+')');
+				newbut.textContent='Remove';
+				cur.appendChild(newbut);
+				
+				var newbr = document.createElement('br');
+				newbr.id='br'+opno;
+				cur.appendChild(newbr);
+				
+			};
+
+			function remop(opno)
+			{
+				var cur = document.getElementById('newop');
+				cur.removeChild(document.getElementById(opno));
+				cur.removeChild(document.getElementById('l'+opno));
+				cur.removeChild(document.getElementById('but'+opno));
+				cur.removeChild(document.getElementById('br'+opno));
+			}; 
+			
+			document.getElementById('inp').addEventListener('submit',function(event)
+				{
+					if(event.target.id==='mcq')
+					{
+						event.preventDefault();
+						var ques=document.getElementById('mq').value;
+						if(ques.trim()==='')
+						{
+							alert('Please Enter Something in Question Box');
+						}
+						else
+						{
+							mcqsubmit();
+						}
+					}
+				});
+
+			function mcqsubmit()
+			{
+
+				var i=1,form = document.getElementById('mcq'),elements=form.elements,option = [],inpstring;
+				while(i< elements.length)
+				{	
+					var e = elements[i];
+					if(e.tagName==="INPUT")
+					{
+						option.push(e.value);
+					}
+					i++;
+				}
+				inpstring=option.join("\n");
+				inpstring=inpstring+"\n";
+				
+				var mcqform = document.getElementById('fsubmit');
+					
+				document.getElementById('question').value =document.getElementById('mq').value;;
+				document.getElementById('qtype').value='M';
+				document.getElementById('options').value = inpstring;
+				mcqform.submit();
+			};
+
+			function dessumit()
+			{
+				var desform = document.getElementById('fsubmit');
+				var ques = document.getElementById('dq').value;
+				
+				if( ques.trim()=== '')
+				{
+					alert('Please Enter Something');
+				}
+				else
+				{
+					document.getElementById('question').value = ques;
+					document.getElementById('qtype').value='D';
+					desform.submit();
+				}
+			};
+	</script>
+	
+	</body>
+</html>
+

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Tests</title>
+		<link rel="stylesheet" href="/css-bin/csssnehal.css">
+	</head>
+	<body>
+		<h2 style="background-color:lightgreen;">Tests</h2>
+		<table>
+			<thead>
+				<tr>
+					<th>Test Id</th>
+					<th>Test Name</th>
+					<th>Start Date</th>
+					<th>Start Time</th>
+					<th>Marks</th>
+				</tr>
+			</thead>
+			<tbody>
+
+				%s
+
+			</tbody>
+		</table>
+
+		<form hidden method="POST" id="form">
+
+			<input type="text" name="testid" id="testid">
+			<input type="text" name="sessionid" id="session">
+			<input type="text" name="tdate" id="tdate">
+			<input type="text" name="ttime" id="ttime">
+
+		</form>
+
+		<script>
+			function loadtest(testid)
+			{
+				var form = document.getElementById('form');	
+
+				var currentDate = new Date();
+
+				var day = currentDate.getDate();
+				var month = currentDate.getMonth() + 1; // Months are zero-indexed
+				var year = currentDate.getFullYear();
+
+				var curdate = (day < 10 ? '0' : '') + day + '-' + (month < 10 ? '0' : '') + month + '-' + year;
+
+				var ISTOffset = 5.5 * 60 * 60; // IST is UTC+5:30
+				
+				var indianTime = new Date(currentDate.getTime() + ISTOffset);
+				
+				var curtime = indianTime.toLocaleTimeString('en-IN', { hour12: false });
+
+				console.log(curdate);
+				console.log(curtime);
+				document.getElementById('tdate').value = curdate;
+				document.getElementById('ttime').value = curtime;
+
+				document.getElementById('testid').value = testid;
+
+				document.getElementById('session').value = '%s';
+
+				form.action='/cgi-bin/checktest.cgi';
+
+				form.submit();
+			};
+		</script>
+	</body>
+</html>
+

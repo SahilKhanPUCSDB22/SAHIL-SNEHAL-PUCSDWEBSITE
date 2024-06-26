@@ -1,0 +1,29 @@
+<html>
+	<head>
+		<title>Student</title>
+		<link rel="stylesheet" href="/css-bin/csssnehal.css">
+	</head>
+	<body>
+		<div class="container">
+			<button id="login" class="login">LOGIN</button><br><br>
+			<button id="signup" class="signup">SIGNUP</button>
+		</div>
+		<script>
+			var l = document.getElementById('login'),s=document.getElementById('signup');
+
+			l.addEventListener('click',function()
+				{
+					l.style.backgroundcolor='grey';
+					window.location.href='http://localhost:7001/login.html';
+				});
+
+			s.addEventListener('click',function()
+				{
+					s.style.backgroundcolor='grey';
+					window.location.href='http://localhost:7001/signup.html';
+				});
+
+		</script>
+	</body>
+</html>
+

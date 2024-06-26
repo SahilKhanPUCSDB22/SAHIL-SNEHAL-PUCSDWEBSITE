@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload and Processing</title>
+</head>
+<body>
+    <h1>File Upload and Processing</h1>
+    <form id="uploadForm" action="/cgi-bin/display.cgi" method="post" enctype="multipart/form-data">
+        <label for="fileInput">Select a file:</label>
+        <input type="file" id="fileInput" name="fileInput">
+	<input type="hidden" id="uid" name="userid" value="fresh">
+        <button type="submit">Upload File</button>
+    </form>
+
+    <div id="output" style="display: none;">
+        <!-- Output content will be displayed here -->
+        <p id="outputContent"></p>
+	<p id="out"></p>
+    </div>
+
+    <script>
+ 
+        document.getElementById('uploadForm').addEventListener('submit', function(event) {
+            event.preventDefault(); 
+            
+            var formData = new FormData(this); 
+            var xhr = new XMLHttpRequest(); 
+            
+  
+            xhr.open('POST', '/cgi-bin/display.cgi', true);
+            xhr.onload = function() {
+                
+		    if (xhr.status == 200) 
+		
+		    {
+
+                    document.getElementById('output').innerHTML = xhr.responseText;
+                    document.getElementById('output').style.display = 'block'; // Show output section
+                
+			if(xhr.responseText=='fresh')
+			    {
+				    document.getElementById('out').textContent = 'sahil';
+			    }
+		
+		    } 
+		    
+		    else 
+		    {
+		    document.getElementById('uid').value='new';
+                    document.getElementById('uploadForm').submit(); // Submit form for file upload
+	                
+		    }
+            };
+
+            // Send form data to backend for processing
+            xhr.send(formData);
+        });
+
+        // Function to handle upload decision
+        function uploadDecision(upload) {
+            if (upload) {
+                document.getElementById('uploadForm').submit(); // Submit form for file upload
+            } else {
+                document.getElementById('output').style.display = 'none'; // Hide output section
+            }
+        }
+    </script>
+</body>
+</html>
+
+

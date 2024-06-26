@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test Timer</title>
+</head>
+<body>
+
+<div id="timer"></div>
+
+<form id="testForm" action="submit-test.php" method="POST">
+  <!-- Test questions and input fields go here -->
+  <input type="submit" value="Submit Test" id="submitBtn" style="display: none;"> <!-- Hidden submit button -->
+</form>
+
+<script>
+// Set the duration of the timer in hours
+var durationHours = 21.1; // 1 hour
+
+// Convert hours to seconds
+var durationSeconds = durationHours * 60 * 60;
+
+// Get the timer display element
+var timerElement = document.getElementById('timer');
+
+// Function to update the timer display
+function updateTimer(seconds) {
+  var hours = Math.floor(seconds / 3600);
+  var minutes = Math.floor((seconds % 3600) / 60);
+  var remainingSeconds = seconds % 60;
+  
+  // Format the time display
+  timerElement.textContent = 'Time remaining: ' + hours + ' hours ' + minutes + ' minutes ' + remainingSeconds + ' seconds';
+}
+
+// Function to be executed when the timer reaches zero
+function timerComplete() {
+  timerElement.textContent = 'Time\'s up!';
+  // Submit the test form
+  document.getElementById('submitBtn').click(); // Trigger the hidden submit button
+}
+
+// Function to start the timer
+function startTimer() {
+  var seconds = durationSeconds;
+  updateTimer(seconds);
+
+  var countdown = setInterval(function() {
+    seconds--;
+    updateTimer(seconds);
+    if (seconds <= 0) {
+      clearInterval(countdown);
+      timerComplete();
+    }
+  }, 1000); // Update the timer every second
+}
+
+// Start the timer when the page loads
+startTimer();
+</script>
+
+</body>
+</html>
+

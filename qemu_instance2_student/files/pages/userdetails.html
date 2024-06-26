@@ -1,0 +1,29 @@
+<html>
+        <head>
+                <title>CREATE TEST PAGE</title>
+                <link rel="stylesheet" href="/css-bin/csssnehal.css">
+        </head>
+
+        <body><div class="front">
+                        %s
+                        <p><a href="#" onclick="goBack()">Home Page</a></p>
+                        <p><a href="#" onclick="load_page('/login.html')">Logout</a></p>
+                        </div>
+                        <form hidden id="form" method="POST">
+                        <input type="hidden" name="sessionid" value="%s">
+                        </form>
+                        <script>
+                                function goBack()
+                                {
+                                        window.history.back();
+                                };
+                                function load_page(scriptname)
+                                {
+                                        var form = document.getElementById('form');
+                                        form.action=scriptname;
+                                        form.submit();
+                                };
+                </script>
+        </body>
+</html>
+
